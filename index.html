@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Time Passer</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f0f4f8;
+            --card-background: #ffffff;
+            --text-color: #2c3e50;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+	.line {
+        text-align: center;
+        color: var(--text-color);
+         font-size: 1.2rem;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        }
+
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        h1 i {
+            color: var(--secondary-color);
+        }
+
+        .section {
+            background-color: #f9f9ff;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(46, 204, 113, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h2 i {
+            color: var(--secondary-color);
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: scale(1.02);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        .result-container {
+            background-color: #f1f8ff;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            min-height: 150px;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-text {
+            line-height: 1.7;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-robot"></i>AI Time Passer</h1>
+<p class="line">
+    Pass boring and waiting times with magic of AI
+</p>
+
+        <div class="section">
+            <h2><i class="fas fa-book"></i>Story Generator</h2>
+            <select id="storyGenre">
+                <option value="adventure">Adventure</option>
+                <option value="romance">Romance</option>
+                <option value="scifi">Science Fiction</option>
+                <option value="mystery">Mystery</option>
+                <option value="fantasy">Fantasy</option>
+                <option value="horror">Horror</option>
+                <option value="historical">Historical</option>
+            </select>
+            <button id="generateStoryBtn">
+                <i class="fas fa-pen"></i>Generate Story
+            </button>
+            <div id="storyResult" class="result-container"></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-laugh"></i>Joke Generator</h2>
+            <button id="generateJokeBtn">
+                <i class="fas fa-smile-beam"></i>Tell Me a Joke
+            </button>
+            <div id="jokeResult" class="result-container"></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-puzzle-piece"></i>Riddle Challenge</h2>
+            <button id="generateRiddleBtn">
+                <i class="fas fa-brain"></i>Get a Riddle
+            </button>
+            <div id="riddleResult" class="result-container"></div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-question-circle"></i>Would You Rather</h2>
+            <button id="wouldYouRatherBtn">
+                <i class="fas fa-random"></i>Generate Scenario
+            </button>
+            <div id="wouldYouRatherResult" class="result-container"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'J9ZRRVPSA33CGM18INEFE7V3KH51J04EIJ51AZ3GXT36I8OR3GXA1XADAMB0GDL2';
+        const ENDPOINT = 'https://jamsapi.hackclub.dev/openai/chat/completions';
+
+        function showLoading(resultElement) {
+            resultElement.innerHTML = `
+                <div id="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Generating content... Please wait.
+                </div>
+            `;
+        }
+
+        function displayError(resultElement, error) {
+            resultElement.innerHTML = `
+                <div style="color: red; text-align: center;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Error: ${error}
+                </div>
+            `;
+        }
+
+        async function generateContent(prompt, resultElement) {
+            showLoading(resultElement);
+
+            try {
+                const response = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4o",
+                        messages: [
+                            {
+                                role: "system", 
+                                content: "You are a creative AI assistant generating engaging content to pass waiting times."
+                            },
+                            {
+                                role: "user", 
+                                content: prompt
+                            }
+                        ],
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const content = data.choices[0].message.content.trim();
+                
+                resultElement.innerHTML = `
+                    <div class="result-text">${content}</div>
+                    <button class="copy-btn" onclick="copyContent(this)">
+                        <i class="fas fa-copy"></i>Copy
+                    </button>
+                `;
+            } catch (error) {
+                displayError(resultElement, error.message);
+            }
+        }
+
+        function copyContent(button) {
+            const resultText = button.previousElementSibling;
+            const text = resultText.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                button.innerHTML = '<i class="fas fa-check"></i>Copied!';
+                button.style.backgroundColor = '#2ecc71';
+                
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy"></i>Copy';
+                    button.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Copy failed', err);
+            });
+        }
+
+        document.getElementById('generateStoryBtn').addEventListener('click', async () => {
+            const genre = document.getElementById('storyGenre').value;
+            const resultElement = document.getElementById('storyResult');
+            const prompt = `Write a compelling short story in the ${genre} genre. Make it creative, with an engaging plot and vivid description. Limit to 250-300 words.`;
+            
+            await generateContent(prompt, resultElement);
+        });
+
+        document.getElementById('generateJokeBtn').addEventListener('click', async () => {
+            const resultElement = document.getElementById('jokeResult');
+            const prompt = `Create a joke that is clever and funny.`;
+            
+            await generateContent(prompt, resultElement);
+        });
+
+        document.getElementById('generateRiddleBtn').addEventListener('click', async () => {
+            const resultElement = document.getElementById('riddleResult');
+            const prompt = `Create an intriguing riddle with a solution that requires creative thinking. Structure it with the riddle first, followed by the answer.`;
+            
+            await generateContent(prompt, resultElement);
+        });
+
+        document.getElementById('wouldYouRatherBtn').addEventListener('click', async () => {
+            const resultElement = document.getElementById('wouldYouRatherResult');
+            const prompt = `Generate a thought-provoking "Would You Rather" scenario. Make it interesting.`;
+            
+            await generateContent(prompt, resultElement);
+        });
+    </script>
+</body>
+</html>
